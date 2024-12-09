@@ -1,0 +1,107 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Struct untuk data karyawan
+struct Karyawan {
+    string nama;
+    string jabatan;
+    int jamKerja;
+    int jamLembur;
+    double gajiPerJam;
+};
+
+// Fungsi untuk mengatur gaji per jam berdasarkan jabatan
+double tentukanGajiPerJam(const string &jabatan) {
+    if (jabatan == "Staff IT") {
+        return 50000;
+    } else if (jabatan == "Office Boy") {
+        return 7000;
+    } else if (jabatan == "Akuntan") {
+        return 70000;
+    } else {
+        cout << "Jabatan tidak dikenal. Gaji per jam tidak tersedia.\n";
+        return 0; // Mengembalikan 0 jika jabatan tidak dikenal
+    }
+}
+
+// Fungsi untuk menghitung gaji total
+double hitungGajiTotal(Karyawan karyawan) {
+    return karyawan.jamKerja * karyawan.gajiPerJam;
+}
+
+// Fungsi untuk menghitung gaji lembur
+double hitungGajiLembur(int jamLembur) {
+    const double gajiLemburPerJam = 10000;
+    return jamLembur * gajiLemburPerJam;
+}
+
+// Fungsi untuk menghitung pajak (10% dari gaji total)
+double hitungPajak(double gajiTotal) {
+    return gajiTotal * 0.1;
+}
+
+// Fungsi untuk menghitung tunjangan (5% dari gaji total)
+double hitungTunjangan(double gajiTotal) {
+    return gajiTotal * 0.05;
+}
+
+// Fungsi untuk menampilkan laporan gaji tanpa kategori pekerjaan
+void tampilkanLaporanGaji(Karyawan karyawan) {
+    double gajiTotal = hitungGajiTotal(karyawan);
+    double gajiLembur = hitungGajiLembur(karyawan.jamLembur);
+    double pajak = hitungPajak(gajiTotal);
+    double tunjangan = hitungTunjangan(gajiTotal);
+    double gajiSetelahPajak = gajiTotal + gajiLembur - pajak + tunjangan;
+
+    cout << "\nLaporan Gaji Karyawan" << endl;
+    cout << "Nama          : " << karyawan.nama << endl;
+    cout << "Gaji Total    : Rp" << gajiTotal << endl;
+    if (karyawan.jamLembur > 0) {
+        cout << "Gaji Lembur   : Rp" << gajiLembur << " (" << karyawan.jamLembur << " jam lembur)" << endl;
+    }
+    cout << "Pajak         : Rp" << pajak << endl;
+    cout << "Tunjangan     : Rp" << tunjangan << endl;
+    cout << "Gaji Bersih (Setelah Pajak, Tunjangan, dan Lembur): Rp" << gajiSetelahPajak << endl;
+}
+
+int main() {
+    char lanjut;
+    
+    do {
+        Karyawan karyawan;
+
+        // Input data karyawan
+        cout << "Masukkan nama karyawan: ";
+        cin.ignore(); // Mengabaikan karakter newline sebelumnya
+        getline(cin, karyawan.nama);
+        cout << "Masukkan jabatan karyawan (Staff IT, Office Boy, Akuntan): ";
+        getline(cin, karyawan.jabatan);
+        cout << "Masukkan jumlah jam kerja: ";
+        cin >> karyawan.jamKerja;
+       
+	
+		 cout << "Masukkan jumlah jam lembur (masukkan 0 jika tidak ada lembur): ";
+	 
+        cin >> karyawan.jamLembur;
+
+        // Tentukan gaji per jam berdasarkan jabatan
+        karyawan.gajiPerJam = tentukanGajiPerJam(karyawan.jabatan);
+
+        // Periksa apakah gaji per jam valid
+        if (karyawan.gajiPerJam > 0) {
+            // Tampilkan laporan gaji
+            tampilkanLaporanGaji(karyawan);
+        } else {
+            cout << "Program dihentikan karena jabatan tidak valid.\n";
+        }
+
+        // Tanya pengguna apakah ingin mengulang
+        cout << "\nApakah Anda ingin memasukkan data karyawan lain? (y/n): ";
+        cin >> lanjut;
+
+    } while (lanjut == 'y' || lanjut == 'Y');
+
+    cout << "Terima kasih telah menggunakan program Sistem Manajemen Gaji.\n";
+    return 0;
+}
